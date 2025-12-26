@@ -72,19 +72,109 @@ final class ForceUpdateControllerTest extends TestCase
         self::assertSame('Unauthorized request.', $this->response['message']);
     }
 
-    public function testClearsCacheOnValidRequest(): void
+    public function testRespondsUnreachableWhenVerificationFails(): void
     {
         $cache = new LicenseCache();
         $cache->write(['status' => true], time() + 3600);
 
-        $controller = new ForceUpdateController(function (int $status, string $message): void {
-            $this->response = ['status' => $status, 'message' => $message];
-        });
+        $verifier = function (): array {
+            return [
+                'success' => false,
+                'response' => null,
+                'error' => 'unreachable',
+            ];
+        };
+
+        $controller = new ForceUpdateController(
+            function (int $status, string $message): void {
+                $this->response = ['status' => $status, 'message' => $message];
+            },
+            $verifier
+        );
+
+        $controller->handle();
+
+        self::assertSame(503, $this->response['status']);
+        self::assertSame('License server unreachable.', $this->response['message']);
+        self::assertNull($cache->read());
+    }
+
+    public function testRejectsInvalidLicenseResponse(): void
+    {
+        $verifier = function (): array {
+            return [
+                'success' => true,
+                'response' => [
+                    'status' => false,
+                    'message' => 'License is not active.',
+                    'acknowledgement' => [
+                        'license' => [
+                            'status' => 'revoked',
+                            'expires_at' => '2999-01-01T00:00:00+00:00',
+                        ],
+                        'extensions' => [],
+                    ],
+                ],
+                'error' => null,
+            ];
+        };
+
+        $controller = new ForceUpdateController(
+            function (int $status, string $message): void {
+                $this->response = ['status' => $status, 'message' => $message];
+            },
+            $verifier
+        );
+
+        $controller->handle();
+
+        self::assertSame(403, $this->response['status']);
+        self::assertSame('License is not active.', $this->response['message']);
+        self::assertNull((new LicenseCache())->read());
+    }
+
+    public function testRefreshesCacheOnValidResponse(): void
+    {
+        $response = [
+            'status' => true,
+            'message' => 'License verified successfully',
+            'acknowledgement' => [
+                'license' => [
+                    'status' => 'active',
+                    'expires_at' => '2999-01-01T00:00:00+00:00',
+                ],
+                'extensions' => [
+                    [
+                        'name' => 'test',
+                        'is_enabled' => true,
+                    ],
+                ],
+            ],
+        ];
+
+        $verifier = function () use ($response): array {
+            return [
+                'success' => true,
+                'response' => $response,
+                'error' => null,
+            ];
+        };
+
+        $controller = new ForceUpdateController(
+            function (int $status, string $message): void {
+                $this->response = ['status' => $status, 'message' => $message];
+            },
+            $verifier
+        );
 
         $controller->handle();
 
         self::assertSame(200, $this->response['status']);
-        self::assertSame('License cache cleared.', $this->response['message']);
-        self::assertNull($cache->read());
+        self::assertSame('License cache refreshed.', $this->response['message']);
+
+        $cacheData = (new LicenseCache())->read();
+        self::assertIsArray($cacheData);
+        self::assertSame($response, $cacheData['response']);
+        self::assertGreaterThan(time(), $cacheData['next_check_at']);
     }
 }

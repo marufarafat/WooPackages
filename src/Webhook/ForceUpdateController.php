@@ -7,16 +7,24 @@ namespace License\Enforcement\Webhook;
 use License\Enforcement\Blocker;
 use License\Enforcement\LicenseCache;
 use License\Enforcement\LicenseClient;
+use License\Enforcement\LicenseValidator;
+use License\Enforcement\Support\DomainResolver;
 use License\Enforcement\Support\Env;
 
 final class ForceUpdateController
 {
     /** @var callable|null */
     private $responder;
+    /** @var callable|null */
+    private $verifier;
+    /** @var callable|null */
+    private $domainResolver;
 
-    public function __construct(?callable $responder = null)
+    public function __construct(?callable $responder = null, ?callable $verifier = null, ?callable $domainResolver = null)
     {
         $this->responder = $responder;
+        $this->verifier = $verifier;
+        $this->domainResolver = $domainResolver;
     }
 
     public function handle(): void
@@ -41,7 +49,23 @@ final class ForceUpdateController
         $cache = new LicenseCache();
         $cache->clear();
 
-        $this->respond(200, 'License cache cleared.');
+        $domain = $this->resolveDomain();
+        $result = $this->verifyLicense($licenseKey, $domain);
+
+        if ($result['success'] !== true || !is_array($result['response'])) {
+            $this->respond(503, 'License server unreachable.');
+            return;
+        }
+
+        $response = $result['response'];
+        $validator = new LicenseValidator();
+        if (!$validator->isValid($response)) {
+            $this->respond(403, $validator->getMessage($response));
+            return;
+        }
+
+        $cache->write($response, $this->nextCheckAt());
+        $this->respond(200, 'License cache refreshed.');
     }
 
     private function reject(string $message): void
@@ -63,6 +87,31 @@ final class ForceUpdateController
 
         echo $message;
         exit($status === 200 ? 0 : 1);
+    }
+
+    private function verifyLicense(string $licenseKey, string $domain): array
+    {
+        if (is_callable($this->verifier)) {
+            return ($this->verifier)($licenseKey, $domain);
+        }
+
+        $client = new LicenseClient();
+        return $client->verify($licenseKey, $domain);
+    }
+
+    private function resolveDomain(): string
+    {
+        if (is_callable($this->domainResolver)) {
+            return (string) ($this->domainResolver)();
+        }
+
+        return DomainResolver::resolve();
+    }
+
+    private function nextCheckAt(): int
+    {
+        $days = random_int(1, 7);
+        return time() + ($days * 86400);
     }
 
     private function getHeader(string $name): ?string
