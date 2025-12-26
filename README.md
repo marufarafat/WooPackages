@@ -41,6 +41,7 @@ The PHP License Enforcement Library:
 - PHP 8.0 or higher
 - PHP web application (not CLI)
 - Composer-compatible autoloading
+- HTTP client dependency: Guzzle (installed via Composer)
 
 ---
 
@@ -58,6 +59,12 @@ Composer autoloading must be enabled:
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
+```
+
+Install dependencies:
+
+```bash
+composer install
 ```
 
 ---
@@ -93,6 +100,8 @@ echo 'Welcome to my application';
 ```
 
 If the license is invalid, the application will be blocked and no further code will execute.
+
+> Note: PHP does not automatically load `.env`. The sample `index.php` includes a small `.env` loader for local testing only. In production, load your environment variables via your runtime or framework.
 
 ---
 
@@ -202,10 +211,10 @@ The application cannot override these behaviors.
 - Application owners may modify code to bypass enforcement
 - Designed for commercial licensing, not piracy prevention
 - Works only for PHP web applications
+- Tests run via `composer test` (requires PHPUnit from Composer)
 
 ---
 
 ## Summary
 
 This library provides a simple, transparent, and enforceable licensing mechanism for PHP web applications, with centralized control and clear communication when enforcement occurs.
-

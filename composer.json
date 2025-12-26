@@ -1,0 +1,26 @@
+{
+    "name": "php-license-enforcement/library",
+    "description": "PHP license enforcement library",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "License\\Enforcement\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "License\\Enforcement\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
