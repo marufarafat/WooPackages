@@ -83,6 +83,8 @@ composer update php-license-enforcement/library
 
 ## 4. Basic Usage (Required)
 
+### 4.1 Vanilla PHP
+
 ### Step 1: Add License Key
 
 Add your license key to the application `.env` file:
@@ -117,6 +119,63 @@ If the license is invalid, the application will be blocked and no further code w
 
 ---
 
+### 4.2 Laravel
+
+#### Middleware (Global)
+
+Create a middleware that boots the license check:
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use License\Enforcement\LicenseEnforcer;
+
+class LicenseEnforcerMiddleware
+{
+    public function handle($request, Closure $next)
+    {
+        LicenseEnforcer::boot();
+        return $next($request);
+    }
+}
+```
+
+Register it in `bootstrap/app.php` (Laravel 12):
+
+```php
+use Illuminate\Foundation\Configuration\Middleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(\App\Http\Middleware\LicenseEnforcerMiddleware::class);
+    })
+    ->create();
+```
+
+#### Webhook Route (API)
+
+Use an API route to avoid CSRF:
+
+```php
+use License\Enforcement\Webhook\ForceUpdateController;
+
+Route::post('/license-webhook.php', function () {
+    $controller = new ForceUpdateController();
+    $controller->handle();
+});
+```
+
+Call it at:
+
+```
+POST https://yourapp.com/api/license-webhook.php
+```
+
+---
+
 ## 5. Webhook Setup (Required)
 
 The library provides its own webhook entry file:
@@ -130,13 +189,13 @@ You must expose this file via your web server (for example, using a symlink):
 ```bash
 ln -s \
 vendor/php-license-enforcement/public/webhook.php \
-public/license-webhook.php
+public/api/license-webhook.php
 ```
 
 The license server will call:
 
 ```text
-POST https://yourapp.com/license-webhook.php
+POST https://yourapp.com/api/license-webhook.php
 ```
 
 ### Webhook Security
