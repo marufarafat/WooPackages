@@ -45,26 +45,38 @@ The PHP License Enforcement Library:
 
 ---
 
-## 3. Installation
+## 3. Installation (Private GitHub Repository Install)
 
-Install the library using any Composer-compatible workflow.
+If the repository is private, add it to your consuming application's `composer.json`:
 
-After installation, the library must be available under:
-
-```text
-vendor/php-license-enforcement/
+```json
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/marufarafat/php-license-enforcement"
+    }
+  ],
+  "require": {
+    "php-license-enforcement/library": "dev-main"
+  }
+}
 ```
 
-Composer autoloading must be enabled:
+Then authenticate Composer with a GitHub token that has repo access:
 
-```php
-require __DIR__ . '/vendor/autoload.php';
+```json
+{
+  "github-oauth": {
+    "github.com": "YOUR_GITHUB_TOKEN"
+  }
+}
 ```
 
-Install dependencies:
+Finally, install/update:
 
 ```bash
-composer install
+composer update php-license-enforcement/library
 ```
 
 ---
@@ -164,6 +176,39 @@ if (!ExtensionManager::enabled('analytics')) {
 
 - Returns `true` if enabled
 - Returns `false` if disabled or missing
+
+---
+
+## 6.1 Activation Payload & Response
+
+The license server expects the activation payload to include the domain:
+
+```json
+{
+  "activation": "domain.com"
+}
+```
+
+Example response:
+
+```json
+{
+  "status": true,
+  "message": "License verified successfully",
+  "acknowledgement": {
+    "license": {
+      "status": "active",
+      "expires_at": "2026-01-16T11:39:29+00:00"
+    },
+    "extensions": [
+      { "name": "test", "is_enabled": true },
+      { "name": "test 2", "is_enabled": true }
+    ]
+  }
+}
+```
+
+If `status` is false, the library blocks and displays the `message` exactly as provided.
 
 ---
 
