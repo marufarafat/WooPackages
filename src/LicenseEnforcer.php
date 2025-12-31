@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement;
+namespace WooPackages;
 
-use License\Enforcement\Support\DomainResolver;
-use License\Enforcement\Support\Env;
+use WooPackages\Support\DomainResolver;
+use WooPackages\Support\Env;
 
 final class LicenseEnforcer
 {

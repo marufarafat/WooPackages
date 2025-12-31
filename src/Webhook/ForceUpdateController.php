@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement\Webhook;
+namespace WooPackages\Webhook;
 
-use License\Enforcement\Blocker;
-use License\Enforcement\LicenseCache;
-use License\Enforcement\LicenseClient;
-use License\Enforcement\LicenseValidator;
-use License\Enforcement\Support\DomainResolver;
-use License\Enforcement\Support\Env;
+use WooPackages\Blocker;
+use WooPackages\LicenseCache;
+use WooPackages\LicenseClient;
+use WooPackages\LicenseValidator;
+use WooPackages\Support\DomainResolver;
+use WooPackages\Support\Env;
 
 final class ForceUpdateController
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement\Support;
+namespace WooPackages\Support;
 
 final class DomainResolver
 {

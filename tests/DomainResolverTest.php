@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement\Tests;
+namespace WooPackages\Tests;
 
-use License\Enforcement\Support\DomainResolver;
+use WooPackages\Support\DomainResolver;
 use PHPUnit\Framework\TestCase;
 
 final class DomainResolverTest extends TestCase

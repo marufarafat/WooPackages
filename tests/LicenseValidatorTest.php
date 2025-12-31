@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement\Tests;
+namespace WooPackages\Tests;
 
-use License\Enforcement\LicenseValidator;
+use WooPackages\LicenseValidator;
 use PHPUnit\Framework\TestCase;
 
 final class LicenseValidatorTest extends TestCase

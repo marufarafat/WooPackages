@@ -8,6 +8,7 @@
 /.phpunit.result.cache
 /phpunit.xml
 /.php-cs-fixer.cache
+/storage/license.cache
 AGENTS.md
 docs/
 .env

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement\Tests;
+namespace WooPackages\Tests;
 
-use License\Enforcement\LicenseEnforcer;
+use WooPackages\LicenseEnforcer;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 

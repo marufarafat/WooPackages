@@ -54,11 +54,11 @@ If the repository is private, add it to your consuming application's `composer.j
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/marufarafat/php-license-enforcement"
+      "url": "https://github.com/marufarafat/WooPackages"
     }
   ],
   "require": {
-    "php-license-enforcement/library": "dev-main"
+    "wooshaper/WooPackages": "dev-main"
   }
 }
 ```
@@ -76,7 +76,7 @@ Then authenticate Composer with a GitHub token that has repo access:
 Finally, install/update:
 
 ```bash
-composer update php-license-enforcement/library
+composer update wooshaper/WooPackages
 ```
 
 ---
@@ -104,7 +104,7 @@ Call the library at the **very beginning** of your main entry file (e.g. `index.
 
 require __DIR__ . '/vendor/autoload.php';
 
-use License\Enforcement\LicenseEnforcer;
+use WooPackages\LicenseEnforcer;
 
 // MUST be the first executable line
 LicenseEnforcer::boot();
@@ -131,7 +131,7 @@ Create a middleware that boots the license check:
 namespace App\Http\Middleware;
 
 use Closure;
-use License\Enforcement\LicenseEnforcer;
+use WooPackages\LicenseEnforcer;
 
 class LicenseEnforcerMiddleware
 {
@@ -160,7 +160,7 @@ return Application::configure(basePath: dirname(__DIR__))
 Use an API route to avoid CSRF:
 
 ```php
-use License\Enforcement\Webhook\ForceUpdateController;
+use WooPackages\Webhook\ForceUpdateController;
 
 Route::post('/license-webhook.php', function () {
     $controller = new ForceUpdateController();
@@ -181,14 +181,14 @@ POST https://yourapp.com/api/license-webhook.php
 The library provides its own webhook entry file:
 
 ```text
-vendor/php-license-enforcement/public/webhook.php
+vendor/wooshaper/woopackages/public/webhook.php
 ```
 
 You must expose this file via your web server (for example, using a symlink):
 
 ```bash
 ln -s \
-vendor/php-license-enforcement/public/webhook.php \
+vendor/wooshaper/woopackages/public/webhook.php \
 public/api/license-webhook.php
 ```
 
@@ -226,7 +226,7 @@ Example license response:
 ### Checking Extensions
 
 ```php
-use License\Enforcement\ExtensionManager;
+use WooPackages\ExtensionManager;
 
 if (!ExtensionManager::enabled('analytics')) {
     exit('Analytics extension is not enabled');

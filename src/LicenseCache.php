@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement;
+namespace WooPackages;
 
 final class LicenseCache
 {

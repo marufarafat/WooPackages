@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement\Tests;
+namespace WooPackages\Tests;
 
-use License\Enforcement\ExtensionManager;
-use License\Enforcement\LicenseCache;
+use WooPackages\ExtensionManager;
+use WooPackages\LicenseCache;
 use PHPUnit\Framework\TestCase;
 
 final class ExtensionManagerTest extends TestCase

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace License\Enforcement\Tests;
+namespace WooPackages\Tests;
 
-use License\Enforcement\LicenseCache;
-use License\Enforcement\Webhook\ForceUpdateController;
+use WooPackages\LicenseCache;
+use WooPackages\Webhook\ForceUpdateController;
 use PHPUnit\Framework\TestCase;
 
 final class ForceUpdateControllerTest extends TestCase

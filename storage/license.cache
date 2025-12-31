@@ -1,1 +1,0 @@
-{"cached_at":1766770210,"next_check_at":1767029410,"response":{"status":true,"message":"License verified successfully","acknowledgement":{"license":{"status":"active","expires_at":"2026-01-16T11:39:29+00:00"},"extensions":[{"name":"test","is_enabled":true},{"name":"test 2","is_enabled":true}]}}}

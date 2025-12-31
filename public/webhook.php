@@ -31,7 +31,7 @@ if (is_file($envPath)) {
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-use License\Enforcement\Webhook\ForceUpdateController;
+use WooPackages\Webhook\ForceUpdateController;
 
 $controller = new ForceUpdateController();
 $controller->handle();

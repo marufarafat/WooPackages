@@ -1,5 +1,5 @@
 {
-    "name": "php-license-enforcement/library",
+    "name": "wooshaper/woopackages",
     "description": "PHP license enforcement library",
     "type": "library",
     "license": "proprietary",
@@ -12,12 +12,12 @@
     },
     "autoload": {
         "psr-4": {
-            "License\\Enforcement\\": "src/"
+            "WooPackages\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "License\\Enforcement\\Tests\\": "tests/"
+            "WooPackages\\Tests\\": "tests/"
         }
     },
     "scripts": {
