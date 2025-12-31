@@ -1,10 +1,10 @@
-# PHP License Enforcement Library
+# PHP Entitlement Enforcement Library
 
-A PHP library for enforcing **commercial license validation** in PHP web applications using a **central license server**.
+A PHP library for enforcing **commercial entitlement validation** in PHP web applications using a **central entitlement server**.
 
-This library validates a license key and domain, caches the license result internally, enforces application blocking when a license becomes invalid, and supports **server-driven enforcement** via a webhook.
+This library validates an entitlement key and domain, caches the entitlement result internally, enforces application blocking when an entitlement becomes invalid, and supports **server-driven enforcement** via a webhook.
 
-> ⚠️ This library is **not DRM**. It is designed for commercial license enforcement, not piracy prevention.
+> ⚠️ This library is **not DRM**. It is designed for commercial entitlement enforcement, not piracy prevention.
 
 ---
 
@@ -24,15 +24,15 @@ This library validates a license key and domain, caches the license result inter
 
 ## 1. Overview
 
-The PHP License Enforcement Library:
+The PHP Entitlement Enforcement Library:
 
-- Validates licenses against a central license server
-- Uses a **license key** and **domain name** for validation
-- Caches the license verification result internally
-- Revalidates licenses at a randomized interval (1–7 days)
-- Fully blocks the application when the license is invalid
+- Validates entitlements against a central entitlement server
+- Uses an **entitlement key** and **domain name** for validation
+- Caches the entitlement verification result internally
+- Revalidates entitlements at a randomized interval (1–7 days)
+- Fully blocks the application when the entitlement is invalid
 - Displays clear, server-defined blocking messages
-- Supports forced license revalidation via webhook
+- Supports forced entitlement revalidation via webhook
 
 ---
 
@@ -85,12 +85,12 @@ composer update wooshaper/WooPackages
 
 ### 4.1 Vanilla PHP
 
-### Step 1: Add License Key
+### Step 1: Add Entitlement Key
 
-Add your license key to the application `.env` file:
+Add your entitlement key to the application `.env` file:
 
 ```env
-LICENSE_KEY=your-license-key-here
+ENTITLEMENT_KEY=your-entitlement-key-here
 ```
 
 ---
@@ -104,16 +104,16 @@ Call the library at the **very beginning** of your main entry file (e.g. `index.
 
 require __DIR__ . '/vendor/autoload.php';
 
-use WooPackages\LicenseEnforcer;
+use WooPackages\EntitlementEnforcer;
 
 // MUST be the first executable line
-LicenseEnforcer::boot();
+EntitlementEnforcer::boot();
 
 // Application code starts here
 echo 'Welcome to my application';
 ```
 
-If the license is invalid, the application will be blocked and no further code will execute.
+If the entitlement is invalid, the application will be blocked and no further code will execute.
 
 > Note: PHP does not automatically load `.env`. The sample `index.php` includes a small `.env` loader for local testing only. In production, load your environment variables via your runtime or framework.
 
@@ -123,7 +123,7 @@ If the license is invalid, the application will be blocked and no further code w
 
 #### Middleware (Global)
 
-Create a middleware that boots the license check:
+Create a middleware that boots the entitlement check:
 
 ```php
 <?php
@@ -131,13 +131,13 @@ Create a middleware that boots the license check:
 namespace App\Http\Middleware;
 
 use Closure;
-use WooPackages\LicenseEnforcer;
+use WooPackages\EntitlementEnforcer;
 
-class LicenseEnforcerMiddleware
+class EntitlementEnforcerMiddleware
 {
     public function handle($request, Closure $next)
     {
-        LicenseEnforcer::boot();
+        EntitlementEnforcer::boot();
         return $next($request);
     }
 }
@@ -150,7 +150,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(\App\Http\Middleware\LicenseEnforcerMiddleware::class);
+        $middleware->append(\App\Http\Middleware\EntitlementEnforcerMiddleware::class);
     })
     ->create();
 ```
@@ -162,7 +162,7 @@ Use an API route to avoid CSRF:
 ```php
 use WooPackages\Webhook\ForceUpdateController;
 
-Route::post('/license-webhook.php', function () {
+Route::post('/entitlement-webhook.php', function () {
     $controller = new ForceUpdateController();
     $controller->handle();
 });
@@ -171,7 +171,7 @@ Route::post('/license-webhook.php', function () {
 Call it at:
 
 ```
-POST https://yourapp.com/api/license-webhook.php
+POST https://yourapp.com/api/entitlement-webhook.php
 ```
 
 ---
@@ -189,20 +189,20 @@ You must expose this file via your web server (for example, using a symlink):
 ```bash
 ln -s \
 vendor/wooshaper/woopackages/public/webhook.php \
-public/api/license-webhook.php
+public/api/entitlement-webhook.php
 ```
 
-The license server will call:
+The entitlement server will call:
 
 ```text
-POST https://yourapp.com/api/license-webhook.php
+POST https://yourapp.com/api/entitlement-webhook.php
 ```
 
 ### Webhook Security
 The library validates:
-- `X-License-Key` header
-- That the license key matches the application license key
-- That the request originates from the license server
+- `X-Entitlement-Key` header
+- That the entitlement key matches the application entitlement key
+- That the request originates from the entitlement server
 
 The application does **not** implement webhook logic.
 
@@ -210,9 +210,9 @@ The application does **not** implement webhook logic.
 
 ## 6. Extension Usage
 
-The license server may define extensions that enable or disable specific capabilities.
+The entitlement server may define extensions that enable or disable specific capabilities.
 
-Example license response:
+Example entitlement response:
 
 ```json
 {
@@ -240,7 +240,7 @@ if (!ExtensionManager::enabled('analytics')) {
 
 ## 6.1 Activation Payload & Response
 
-The license server expects the activation payload to include the domain:
+The entitlement server expects the activation payload to include the domain:
 
 ```json
 {
@@ -253,9 +253,9 @@ Example response:
 ```json
 {
   "status": true,
-  "message": "License verified successfully",
+  "message": "Entitlement verified successfully",
   "acknowledgement": {
-    "license": {
+    "entitlement": {
       "status": "active",
       "expires_at": "2026-01-16T11:39:29+00:00"
     },
@@ -273,11 +273,11 @@ If `status` is false, the library blocks and displays the `message` exactly as p
 
 ## 7. Blocking Behavior
 
-When the license is invalid:
+When the entitlement is invalid:
 
 - Application execution stops immediately
 - The landing page is replaced
-- The blocking message is shown **exactly as returned by the license server**
+- The blocking message is shown **exactly as returned by the entitlement server**
 - No application code continues executing
 
 ---
@@ -287,8 +287,8 @@ When the license is invalid:
 The consuming application:
 
 - Installs the library
-- Provides the license key via `.env`
-- Calls `LicenseEnforcer::boot()`
+- Provides the entitlement key via `.env`
+- Calls `EntitlementEnforcer::boot()`
 - Exposes the webhook entry file
 
 Nothing else.
@@ -299,7 +299,7 @@ Nothing else.
 
 The library exclusively controls:
 
-- License server communication
+- Entitlement server communication
 - Cache storage and revalidation
 - Application blocking
 - Webhook handling

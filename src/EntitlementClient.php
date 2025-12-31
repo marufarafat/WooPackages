@@ -7,7 +7,7 @@ namespace WooPackages;
 use GuzzleHttp\Client;
 use Throwable;
 
-final class LicenseClient
+final class EntitlementClient
 {
     private const LICENSE_SERVER_URL = 'http://licensemanagement.test';
 

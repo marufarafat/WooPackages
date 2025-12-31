@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace WooPackages\Tests;
 
-use WooPackages\LicenseEnforcer;
+use WooPackages\EntitlementEnforcer;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
-final class LicenseEnforcerCachePolicyTest extends TestCase
+final class EntitlementEnforcerCachePolicyTest extends TestCase
 {
     public function testShouldCacheResponseOnlyWhenStatusTrue(): void
     {
-        $method = new ReflectionMethod(LicenseEnforcer::class, 'shouldCacheResponse');
+        $method = new ReflectionMethod(EntitlementEnforcer::class, 'shouldCacheResponse');
         $method->setAccessible(true);
 
         self::assertTrue($method->invoke(null, ['status' => true]));

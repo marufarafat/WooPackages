@@ -7,7 +7,7 @@ namespace WooPackages;
 use WooPackages\Support\DomainResolver;
 use WooPackages\Support\Env;
 
-final class LicenseEnforcer
+final class EntitlementEnforcer
 {
     public static function boot(): void
     {
@@ -17,8 +17,8 @@ final class LicenseEnforcer
         }
 
         $domain = DomainResolver::resolve();
-        $cache = new LicenseCache();
-        $validator = new LicenseValidator();
+        $cache = new EntitlementCache();
+        $validator = new EntitlementValidator();
 
         $cacheData = $cache->read();
         $response = null;
@@ -34,7 +34,7 @@ final class LicenseEnforcer
         }
 
         if ($response === null) {
-            $client = new LicenseClient();
+            $client = new EntitlementClient();
             $result = $client->verify($licenseKey, $domain);
 
             if ($result['success'] === true && is_array($result['response'])) {

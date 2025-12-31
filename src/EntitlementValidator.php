@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WooPackages;
 
-final class LicenseValidator
+final class EntitlementValidator
 {
     public function isValid(array $response): bool
     {

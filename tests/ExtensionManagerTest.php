@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace WooPackages\Tests;
 
 use WooPackages\ExtensionManager;
-use WooPackages\LicenseCache;
+use WooPackages\EntitlementCache;
 use PHPUnit\Framework\TestCase;
 
 final class ExtensionManagerTest extends TestCase
 {
-    private LicenseCache $cache;
+    private EntitlementCache $cache;
 
     protected function setUp(): void
     {
-        $this->cache = new LicenseCache();
+        $this->cache = new EntitlementCache();
         $this->cache->clear();
     }
 

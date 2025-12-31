@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WooPackages\Tests;
 
-use WooPackages\LicenseCache;
+use WooPackages\EntitlementCache;
 use WooPackages\Webhook\ForceUpdateController;
 use PHPUnit\Framework\TestCase;
 
@@ -19,17 +19,17 @@ final class ForceUpdateControllerTest extends TestCase
         $_ENV['LICENSE_KEY'] = 'test-key';
         $_SERVER['HTTP_X_LICENSE_KEY'] = 'test-key';
         $_SERVER['REMOTE_ADDR'] = gethostbyname('licensemanagement.test');
-        (new LicenseCache())->clear();
+        (new EntitlementCache())->clear();
     }
 
     protected function tearDown(): void
     {
         putenv('LICENSE_KEY');
         unset($_ENV['LICENSE_KEY'], $_SERVER['HTTP_X_LICENSE_KEY'], $_SERVER['REMOTE_ADDR']);
-        (new LicenseCache())->clear();
+        (new EntitlementCache())->clear();
     }
 
-    public function testRejectsWhenLicenseKeyMissing(): void
+    public function testRejectsWhenEntitlementKeyMissing(): void
     {
         putenv('LICENSE_KEY');
         unset($_ENV['LICENSE_KEY']);
@@ -74,7 +74,7 @@ final class ForceUpdateControllerTest extends TestCase
 
     public function testRespondsUnreachableWhenVerificationFails(): void
     {
-        $cache = new LicenseCache();
+        $cache = new EntitlementCache();
         $cache->write(['status' => true], time() + 3600);
 
         $verifier = function (): array {
@@ -99,7 +99,7 @@ final class ForceUpdateControllerTest extends TestCase
         self::assertNull($cache->read());
     }
 
-    public function testRejectsInvalidLicenseResponse(): void
+    public function testRejectsInvalidEntitlementResponse(): void
     {
         $verifier = function (): array {
             return [
@@ -130,7 +130,7 @@ final class ForceUpdateControllerTest extends TestCase
 
         self::assertSame(403, $this->response['status']);
         self::assertSame('License is not active.', $this->response['message']);
-        self::assertNull((new LicenseCache())->read());
+        self::assertNull((new EntitlementCache())->read());
     }
 
     public function testRefreshesCacheOnValidResponse(): void
@@ -172,7 +172,7 @@ final class ForceUpdateControllerTest extends TestCase
         self::assertSame(200, $this->response['status']);
         self::assertSame('License cache refreshed.', $this->response['message']);
 
-        $cacheData = (new LicenseCache())->read();
+        $cacheData = (new EntitlementCache())->read();
         self::assertIsArray($cacheData);
         self::assertSame($response, $cacheData['response']);
         self::assertGreaterThan(time(), $cacheData['next_check_at']);

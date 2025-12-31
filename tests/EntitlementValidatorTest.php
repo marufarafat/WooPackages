@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace WooPackages\Tests;
 
-use WooPackages\LicenseValidator;
+use WooPackages\EntitlementValidator;
 use PHPUnit\Framework\TestCase;
 
-final class LicenseValidatorTest extends TestCase
+final class EntitlementValidatorTest extends TestCase
 {
-    public function testValidLicensePasses(): void
+    public function testValidEntitlementPasses(): void
     {
-        $validator = new LicenseValidator();
+        $validator = new EntitlementValidator();
         $response = [
             'status' => true,
             'message' => 'ok',
@@ -27,7 +27,7 @@ final class LicenseValidatorTest extends TestCase
 
     public function testMissingStatusFails(): void
     {
-        $validator = new LicenseValidator();
+        $validator = new EntitlementValidator();
         $response = [
             'message' => 'no status',
         ];
@@ -35,9 +35,9 @@ final class LicenseValidatorTest extends TestCase
         self::assertFalse($validator->isValid($response));
     }
 
-    public function testInactiveLicenseFails(): void
+    public function testInactiveEntitlementFails(): void
     {
-        $validator = new LicenseValidator();
+        $validator = new EntitlementValidator();
         $response = [
             'status' => true,
             'message' => 'inactive',
@@ -51,9 +51,9 @@ final class LicenseValidatorTest extends TestCase
         self::assertFalse($validator->isValid($response));
     }
 
-    public function testExpiredLicenseFails(): void
+    public function testExpiredEntitlementFails(): void
     {
-        $validator = new LicenseValidator();
+        $validator = new EntitlementValidator();
         $response = [
             'status' => true,
             'message' => 'expired',
@@ -70,7 +70,7 @@ final class LicenseValidatorTest extends TestCase
 
     public function testFutureExpirationPasses(): void
     {
-        $validator = new LicenseValidator();
+        $validator = new EntitlementValidator();
         $response = [
             'status' => true,
             'message' => 'future',

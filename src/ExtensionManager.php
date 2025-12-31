@@ -13,7 +13,7 @@ final class ExtensionManager
             return false;
         }
 
-        $cache = new LicenseCache();
+        $cache = new EntitlementCache();
         $cacheData = $cache->read();
         if (!is_array($cacheData)) {
             return false;
