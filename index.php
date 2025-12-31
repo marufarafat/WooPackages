@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-use License\Enforcement\ExtensionManager;
-use License\Enforcement\LicenseEnforcer;
+use WooPackages\ExtensionManager;
+use WooPackages\EntitlementEnforcer;
 
 // Simple .env loader for local testing.
 $envPath = __DIR__ . '/.env';
@@ -35,9 +35,9 @@ if (is_file($envPath)) {
 }
 
 // MUST be the first executable line
-LicenseEnforcer::boot();
+EntitlementEnforcer::boot();
 
-echo "License check passed.<br>";
+echo "Entitlement check passed.<br>";
 echo ExtensionManager::enabled('test') ? "Extension 'test' is enabled.<br>" : "Extension 'test' is disabled.<br>";
 echo ExtensionManager::enabled('test 2') ? "Extension 'test 2' is enabled.<br>" : "Extension 'test 2' is disabled.<br>";
 echo ExtensionManager::enabled('test 3') ? "Extension 'test 3' is enabled.<br>" : "Extension 'test 3' is disabled.<br>";
