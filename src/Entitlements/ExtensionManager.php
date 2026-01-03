@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WooPackages;
+namespace WooPackages\Entitlements;
 
 final class ExtensionManager
 {
@@ -13,7 +13,7 @@ final class ExtensionManager
             return false;
         }
 
-        $cache = new EntitlementCache();
+        $cache = new Cache();
         $cacheData = $cache->read();
         if (!is_array($cacheData)) {
             return false;

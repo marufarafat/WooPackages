@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WooPackages;
+namespace WooPackages\Entitlements;
 
-final class EntitlementValidator
+final class Validator
 {
     public function isValid(array $response): bool
     {

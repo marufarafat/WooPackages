@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace WooPackages\Tests;
 
-use WooPackages\ExtensionManager;
-use WooPackages\EntitlementCache;
 use PHPUnit\Framework\TestCase;
+use WooPackages\Entitlements\Cache;
+use WooPackages\Entitlements\ExtensionManager;
 
 final class ExtensionManagerTest extends TestCase
 {
-    private EntitlementCache $cache;
+    private Cache $cache;
 
     protected function setUp(): void
     {
-        $this->cache = new EntitlementCache();
+        $this->cache = new Cache();
         $this->cache->clear();
     }
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WooPackages\Tests;
 
-use WooPackages\EntitlementCache;
-use WooPackages\Webhook\ForceUpdateController;
 use PHPUnit\Framework\TestCase;
+use WooPackages\Entitlements\Cache;
+use WooPackages\Webhook\ForceUpdateController;
 
 final class ForceUpdateControllerTest extends TestCase
 {
@@ -19,14 +19,14 @@ final class ForceUpdateControllerTest extends TestCase
         $_ENV['LICENSE_KEY'] = 'test-key';
         $_SERVER['HTTP_X_LICENSE_KEY'] = 'test-key';
         $_SERVER['REMOTE_ADDR'] = gethostbyname('licensemanagement.test');
-        (new EntitlementCache())->clear();
+        (new Cache())->clear();
     }
 
     protected function tearDown(): void
     {
         putenv('LICENSE_KEY');
         unset($_ENV['LICENSE_KEY'], $_SERVER['HTTP_X_LICENSE_KEY'], $_SERVER['REMOTE_ADDR']);
-        (new EntitlementCache())->clear();
+        (new Cache())->clear();
     }
 
     public function testRejectsWhenEntitlementKeyMissing(): void
@@ -74,7 +74,7 @@ final class ForceUpdateControllerTest extends TestCase
 
     public function testRespondsUnreachableWhenVerificationFails(): void
     {
-        $cache = new EntitlementCache();
+        $cache = new Cache();
         $cache->write(['status' => true], time() + 3600);
 
         $verifier = function (): array {
@@ -130,7 +130,7 @@ final class ForceUpdateControllerTest extends TestCase
 
         self::assertSame(403, $this->response['status']);
         self::assertSame('License is not active.', $this->response['message']);
-        self::assertNull((new EntitlementCache())->read());
+        self::assertNull((new Cache())->read());
     }
 
     public function testRefreshesCacheOnValidResponse(): void
@@ -172,7 +172,7 @@ final class ForceUpdateControllerTest extends TestCase
         self::assertSame(200, $this->response['status']);
         self::assertSame('License cache refreshed.', $this->response['message']);
 
-        $cacheData = (new EntitlementCache())->read();
+        $cacheData = (new Cache())->read();
         self::assertIsArray($cacheData);
         self::assertSame($response, $cacheData['response']);
         self::assertGreaterThan(time(), $cacheData['next_check_at']);

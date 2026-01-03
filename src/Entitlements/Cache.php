@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WooPackages;
+namespace WooPackages\Entitlements;
 
-final class EntitlementCache
+final class Cache
 {
     private const CACHE_FILE = 'storage/license.cache';
 

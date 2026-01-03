@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WooPackages;
+namespace WooPackages\Entitlements;
 
 use WooPackages\Support\DomainResolver;
 use WooPackages\Support\Env;
 
-final class EntitlementEnforcer
+final class Enforcer
 {
     public static function boot(): void
     {
@@ -17,8 +17,8 @@ final class EntitlementEnforcer
         }
 
         $domain = DomainResolver::resolve();
-        $cache = new EntitlementCache();
-        $validator = new EntitlementValidator();
+        $cache = new Cache();
+        $validator = new Validator();
 
         $cacheData = $cache->read();
         $response = null;
@@ -34,7 +34,7 @@ final class EntitlementEnforcer
         }
 
         if ($response === null) {
-            $client = new EntitlementClient();
+            $client = new Client();
             $result = $client->verify($licenseKey, $domain);
 
             if ($result['success'] === true && is_array($result['response'])) {

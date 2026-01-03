@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace WooPackages\Tests;
 
-use WooPackages\EntitlementValidator;
 use PHPUnit\Framework\TestCase;
+use WooPackages\Entitlements\Validator;
 
 final class EntitlementValidatorTest extends TestCase
 {
     public function testValidEntitlementPasses(): void
     {
-        $validator = new EntitlementValidator();
+        $validator = new Validator();
         $response = [
             'status' => true,
             'message' => 'ok',
@@ -27,7 +27,7 @@ final class EntitlementValidatorTest extends TestCase
 
     public function testMissingStatusFails(): void
     {
-        $validator = new EntitlementValidator();
+        $validator = new Validator();
         $response = [
             'message' => 'no status',
         ];
@@ -37,7 +37,7 @@ final class EntitlementValidatorTest extends TestCase
 
     public function testInactiveEntitlementFails(): void
     {
-        $validator = new EntitlementValidator();
+        $validator = new Validator();
         $response = [
             'status' => true,
             'message' => 'inactive',
@@ -53,7 +53,7 @@ final class EntitlementValidatorTest extends TestCase
 
     public function testExpiredEntitlementFails(): void
     {
-        $validator = new EntitlementValidator();
+        $validator = new Validator();
         $response = [
             'status' => true,
             'message' => 'expired',
@@ -70,7 +70,7 @@ final class EntitlementValidatorTest extends TestCase
 
     public function testFutureExpirationPasses(): void
     {
-        $validator = new EntitlementValidator();
+        $validator = new Validator();
         $response = [
             'status' => true,
             'message' => 'future',

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace WooPackages\Webhook;
 
-use WooPackages\Blocker;
-use WooPackages\EntitlementCache;
-use WooPackages\EntitlementClient;
-use WooPackages\EntitlementValidator;
+use WooPackages\Entitlements\Cache;
+use WooPackages\Entitlements\Client;
+use WooPackages\Entitlements\Validator;
 use WooPackages\Support\DomainResolver;
 use WooPackages\Support\Env;
 
@@ -46,7 +45,7 @@ final class ForceUpdateController
             return;
         }
 
-        $cache = new EntitlementCache();
+        $cache = new Cache();
         $cache->clear();
 
         $domain = $this->resolveDomain();
@@ -58,7 +57,7 @@ final class ForceUpdateController
         }
 
         $response = $result['response'];
-        $validator = new EntitlementValidator();
+        $validator = new Validator();
         if (!$validator->isValid($response)) {
             $this->respond(403, $validator->getMessage($response));
             return;
@@ -95,7 +94,7 @@ final class ForceUpdateController
             return ($this->verifier)($licenseKey, $domain);
         }
 
-        $client = new EntitlementClient();
+        $client = new Client();
         return $client->verify($licenseKey, $domain);
     }
 
@@ -126,7 +125,7 @@ final class ForceUpdateController
 
     private function isFromLicenseServer(): bool
     {
-        $url = EntitlementClient::serverUrl();
+        $url = Client::serverUrl();
         $host = parse_url($url, PHP_URL_HOST);
         if (!is_string($host) || $host === '') {
             return false;

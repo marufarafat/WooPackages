@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WooPackages;
+namespace WooPackages\Entitlements;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as HTTP;
 use Throwable;
 
-final class EntitlementClient
+final class Client
 {
     private const LICENSE_SERVER_URL = 'http://licensemanagement.test';
 
@@ -20,7 +20,7 @@ final class EntitlementClient
 
     public function verify(string $licenseKey, string $domain): array
     {
-        $client = new Client([
+        $client = new HTTP([
             'timeout' => 5,
             'http_errors' => false,
         ]);

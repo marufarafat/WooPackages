@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WooPackages;
+namespace WooPackages\Entitlements;
 
 final class Blocker
 {

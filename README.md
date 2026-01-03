@@ -90,7 +90,7 @@ composer update wooshaper/WooPackages
 Add your entitlement key to the application `.env` file:
 
 ```env
-ENTITLEMENT_KEY=your-entitlement-key-here
+LICENSE_KEY=your-entitlement-key-here
 ```
 
 ---
@@ -104,10 +104,10 @@ Call the library at the **very beginning** of your main entry file (e.g. `index.
 
 require __DIR__ . '/vendor/autoload.php';
 
-use WooPackages\EntitlementEnforcer;
+use WooPackages\Entitlements\Enforcer;
 
 // MUST be the first executable line
-EntitlementEnforcer::boot();
+Enforcer::boot();
 
 // Application code starts here
 echo 'Welcome to my application';
@@ -130,14 +130,13 @@ Create a middleware that boots the entitlement check:
 
 namespace App\Http\Middleware;
 
-use Closure;
-use WooPackages\EntitlementEnforcer;
+use Closure;use WooPackages\Entitlements\Enforcer;
 
 class EntitlementEnforcerMiddleware
 {
     public function handle($request, Closure $next)
     {
-        EntitlementEnforcer::boot();
+        Enforcer::boot();
         return $next($request);
     }
 }
@@ -226,7 +225,7 @@ Example entitlement response:
 ### Checking Extensions
 
 ```php
-use WooPackages\ExtensionManager;
+use WooPackages\Entitlements\ExtensionManager;
 
 if (!ExtensionManager::enabled('analytics')) {
     exit('Analytics extension is not enabled');
@@ -253,7 +252,7 @@ Example response:
 ```json
 {
   "status": true,
-  "message": "Entitlement verified successfully",
+  "message": "License verified successfully",
   "acknowledgement": {
     "entitlement": {
       "status": "active",
@@ -288,7 +287,7 @@ The consuming application:
 
 - Installs the library
 - Provides the entitlement key via `.env`
-- Calls `EntitlementEnforcer::boot()`
+- Calls `Enforcer::boot()`
 - Exposes the webhook entry file
 
 Nothing else.
