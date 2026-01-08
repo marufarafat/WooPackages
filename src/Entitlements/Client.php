@@ -9,7 +9,7 @@ use Throwable;
 
 final class Client
 {
-    private const LICENSE_SERVER_URL = 'http://licensemanagement.test';
+    private const LICENSE_SERVER_URL = 'https://console.wooshaper.com';
 
     private const LICENSE_SERVER_ENDPOINT = '/api/licenses/verify';
 
