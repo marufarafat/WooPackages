@@ -9,13 +9,13 @@ use Throwable;
 
 final class Client
 {
-    private const LICENSE_SERVER_URL = 'https://console.wooshaper.com';
+    private const LICENSE_SERVER_URL = 'aHR0cHM6Ly9jb25zb2xlLndvb3NoYXBlci5jb20=';
 
-    private const LICENSE_SERVER_ENDPOINT = '/api/licenses/verify';
+    private const LICENSE_SERVER_ENDPOINT = 'L2FwaS9saWNlbnNlcy92ZXJpZnk=';
 
     public static function serverUrl(): string
     {
-        return self::LICENSE_SERVER_URL . self::LICENSE_SERVER_ENDPOINT;
+        return base64_decode(self::LICENSE_SERVER_URL) . base64_decode(self::LICENSE_SERVER_ENDPOINT);
     }
 
     public function verify(string $licenseKey, string $domain): array
