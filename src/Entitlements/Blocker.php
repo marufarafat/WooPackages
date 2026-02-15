@@ -22,7 +22,7 @@ final class Blocker
 
     private static function renderPage(string $message): string
     {
-        $templatePath = dirname(__DIR__) . '/templates/blocker.php';
+        $templatePath = dirname(__DIR__, 2) . '/templates/blocker.php';
         ob_start();
         require $templatePath;
         return (string) ob_get_clean();
