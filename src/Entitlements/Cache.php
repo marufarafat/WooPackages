@@ -55,6 +55,6 @@ final class Cache
 
     private function getCachePath(): string
     {
-        return dirname(__DIR__) . DIRECTORY_SEPARATOR . self::CACHE_FILE;
+        return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . self::CACHE_FILE;
     }
 }
