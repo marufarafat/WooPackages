@@ -11,7 +11,15 @@ final class Enforcer
 {
     public static function boot(): void
     {
-        $licenseKey = Env::get('LICENSE_KEY');
+        self::check(null, false);
+    }
+
+    public static function check(?string $licenseKey = null, bool $forceLive = false): void
+    {
+        if ($licenseKey === null) {
+            $licenseKey = Env::get('LICENSE_KEY');
+        }
+
         if ($licenseKey === null) {
             Blocker::block(Blocker::MESSAGE_MISSING_LICENSE_KEY);
         }
@@ -19,6 +27,10 @@ final class Enforcer
         $domain = DomainResolver::resolve();
         $cache = new Cache();
         $validator = new Validator();
+
+        if ($forceLive) {
+            $cache->clear();
+        }
 
         $cacheData = $cache->read();
         $response = null;
