@@ -9,7 +9,7 @@ use Throwable;
 
 final class Client
 {
-    private const LICENSE_SERVER_URL = 'aHR0cHM6Ly9jb25zb2xlLndvb3NoYXBlci5jb20=';
+    private const LICENSE_SERVER_URL = 'aHR0cHM6Ly9saWMud29vc2hhcGVyLmNvbQ==';
 
     private const LICENSE_SERVER_ENDPOINT = 'L2FwaS9saWNlbnNlcy92ZXJpZnk=';
 
